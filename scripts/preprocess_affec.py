@@ -20,7 +20,8 @@ import json
 import os
 import sys
 import warnings
-from multiprocessing import Pool
+import multiprocessing as mp
+from functools import partial
 
 import numpy as np
 import pandas as pd
@@ -121,7 +122,10 @@ def process_run(raw, sub, run, ev, beh):
     return out
 
 
-def process_subject(sub):
+def process_subject(sub, args=None):
+    global ARGS
+    if args is not None:                                        # spawned worker: receive the config
+        ARGS = args
     raw = ARGS.raw
     evs = sorted(glob.glob(f"{raw}/{sub}/{sub}_task-fer_run-*_events.tsv"))
     behs = sorted(glob.glob(f"{raw}/{sub}/beh/{sub}_task-fer_run-*_beh.tsv"))
@@ -174,8 +178,9 @@ def main():
         subs = [s for s in subs if s not in excluded]
     print(f"{len(subs)} subjects", flush=True)
 
-    with Pool(ARGS.workers) as pool:
-        rows = [r for rs in pool.map(process_subject, subs) for r in rs]
+    # "spawn" avoids fork-after-threads deadlocks in BLAS / MNE
+    with mp.get_context("spawn").Pool(ARGS.workers) as pool:
+        rows = [r for rs in pool.imap(partial(process_subject, args=ARGS), subs) for r in rs]
     if not rows:
         sys.exit("no trials found - check --raw")
 
