@@ -8,7 +8,7 @@ Dodla Nithya Sai · M. Vishnu Vardhan · P. Sreekar Reddy · S. Beena Reddy
 
 ## Abstract
 
-We present an end-to-end deep learning system that recognises human emotions by fusing three biosignal modalities: electroencephalography (EEG), peripheral physiology (galvanic skin response, skin temperature, accelerometer) and eye tracking. Each modality has a dedicated encoder: a CNN + LSTM for EEG topographic band-power maps, an LSTM for physiological time series, and a CNN + GRU for gaze heatmaps. A Transformer with multi-head self-attention then fuses the three, followed by a fully connected softmax classifier. The pipeline was first validated on synthetic multimodal data, where it reaches 99.7% accuracy. It was then trained and evaluated on the real **AFFEC** dataset: 66 participants, 5,306 trials, 63-channel EEG at 256 Hz. In the strict **subject-independent** setting, where test participants are never seen during training, the fused model classifies four emotions (neutral, happy, sad, angry) with **35.9 ± 2.2% accuracy (macro-F1 0.357)**. Chance is 25%, and the result is statistically far above chance (z ≈ 14.5, n = 3,324). The modality ablation shows eye tracking is the most informative single modality on this task. EEG and physiological signals alone generalise poorly across people.
+We present an end-to-end deep learning system that recognises human emotions by fusing three biosignal modalities: electroencephalography (EEG), peripheral physiology (galvanic skin response, skin temperature, accelerometer) and eye tracking. Each modality has a dedicated encoder: a CNN + LSTM for EEG topographic band-power maps, an LSTM for physiological time series, and a CNN + GRU for gaze heatmaps. A Transformer with multi-head self-attention then fuses the three, followed by a fully connected softmax classifier. The pipeline was first validated on synthetic multimodal data, where it reaches 99.7% accuracy. It was then trained and evaluated on the real **AFFEC** dataset: 66 participants, 5,306 trials, 63-channel EEG at 256 Hz. In the strict **subject-independent** setting, where test participants are never seen during training, the fused model classifies four emotions (neutral, happy, sad, angry) with **35.9 ± 2.2% accuracy (macro-F1 0.357)**. Chance is 25%, and the result is statistically far above chance (z ≈ 14.5, n = 3,324). The modality ablation shows that combining modalities beats any single one. Eye tracking is the most informative single modality (35.1%), and the physio + eye pair reaches the best ablation score (36.1%). EEG and physiological signals alone generalise poorly across people (28–29%).
 
 ## 1. Introduction
 
@@ -197,24 +197,28 @@ Per-fold accuracy is 0.380, 0.377, 0.320, 0.351 and 0.366. Pooled over all 3,324
 | Physio only | 0.289 ± 0.007 | 0.268 ± 0.008 | 0.288 |
 | Eye only | 0.351 ± 0.008 | 0.350 ± 0.010 | 0.351 |
 | EEG + Physio | 0.296 ± 0.001 | 0.280 ± 0.012 | 0.295 |
-| EEG + Eye | *running* | | |
-| Physio + Eye | *running* | | |
-| EEG + Physio + Eye (3-fold) | *running* | | |
-| **EEG + Physio + Eye (5-fold, Section 8.2)** | **0.359 ± 0.022** | **0.357 ± 0.024** | **0.358** |
+| EEG + Eye | 0.346 ± 0.009 | 0.347 ± 0.010 | 0.346 |
+| **Physio + Eye** | **0.361 ± 0.008** | **0.360 ± 0.010** | **0.361** |
+| EEG + Physio + Eye | 0.349 ± 0.007 | 0.341 ± 0.008 | 0.350 |
+| EEG + Physio + Eye (5-fold, Section 8.2) | 0.359 ± 0.022 | 0.357 ± 0.024 | 0.358 |
 
-*Rows marked "running" were still training when this report was generated. `outputs/ablation_affec_stimulus4_subject/results.md` holds the final table once the run completes.*
+All ablation rows use the same 3-fold participant split, so they are directly comparable. The 5-fold row uses more training participants per fold.
 
 ### 8.4 Additional settings
 
 | Setting | Accuracy | Macro-F1 |
 |---|---|---|
-| 4 emotions, subject-**dependent** random split (5-fold) | *running* | |
+| 4 emotions, subject-**dependent** random split (5-fold) | 0.361 ± 0.026 | 0.357 ± 0.031 |
 | 6 emotions (`stimulus6`), subject-independent (chance 0.167) | *running* | |
 | Felt valence × arousal quadrants (`felt_va4`), subject-independent | *running* | |
 
 ## 9. Discussion
 
-**The fused model beats every single-modality model.** All three modalities together achieve the best accuracy (35.9%), ahead of eye tracking alone (35.1%), physiology alone (28.9%) and EEG alone (28.4%). Adding physiology to EEG improves EEG (28.4 → 29.6%), which supports the multimodal premise of the project.
+**Fusion helps: every combination beats its weakest member, and the best models are multimodal.** On the common 3-fold split, physio + eye is the best combination (36.1%). It beats eye alone (35.1%), physiology alone (28.9%) and EEG alone (28.4%). Adding physiology to EEG also helps (28.4 → 29.6%), as does adding gaze to EEG (→ 34.6%). These results support the multimodal premise of the project.
+
+**EEG does not add information for unseen people.** Adding EEG to physio + eye gives 34.9% vs 36.1%, within about one standard deviation. On this short-stimulus, cross-subject task, the EEG features carry little person-independent emotion information and mostly add noise. The Transformer cannot fully suppress that with ~2,000 training trials. With all three modalities and five folds (more training participants per fold), the full model reaches 35.9%. Better EEG generalisation, through subject adaptation or more data, is the main lever for improvement.
+
+**Subject-dependent vs. independent.** The random split (36.1%) performs about the same as the subject-independent split (35.9%). Per-participant z-scoring and baseline correction remove most between-person offsets. The remaining difficulty lies in the short, subtle single-trial responses themselves, not in person identity.
 
 **Eye tracking is the strongest single cue, and part of that is stimulus-driven.** Gaze heatmaps reflect where people look on the actor's face (eyes vs. mouth), and that depends partly on the facial expression shown in the video. So eye tracking captures both the viewer's response and properties of the stimulus itself. This is legitimate for recognising the *portrayed* emotion, but it should be kept in mind when interpreting "felt" emotion.
 
@@ -226,7 +230,7 @@ Per-fold accuracy is 0.380, 0.377, 0.320, 0.351 and 0.366. Pooled over all 3,324
 
 ## 10. Conclusion
 
-We built and evaluated a complete multimodal emotion recognition system: CNN + LSTM for EEG, LSTM for physiology, CNN + GRU for eye tracking, Transformer fusion and a softmax classifier. Its preprocessing pipeline turns the raw AFFEC BIDS recordings into aligned 50-step tensors. The architecture works perfectly on synthetic data and is significantly above chance on real data from unseen participants (35.9% vs. 25% for four emotions). Fusing modalities beats any single modality. Every part of the work is reproducible with the scripts in the repository.
+We built and evaluated a complete multimodal emotion recognition system: CNN + LSTM for EEG, LSTM for physiology, CNN + GRU for eye tracking, Transformer fusion and a softmax classifier. Its preprocessing pipeline turns the raw AFFEC BIDS recordings into aligned 50-step tensors. The architecture works perfectly on synthetic data and is significantly above chance on real data from unseen participants (35.9% vs. 25% for four emotions). The best results come from fusing modalities (physio + eye 36.1%; all three 35.9% with 5-fold CV), ahead of every single modality. EEG generalising to new people remains the main open challenge. Every part of the work is reproducible with the scripts in the repository.
 
 ## 11. Future Work
 
@@ -238,7 +242,7 @@ We built and evaluated a complete multimodal emotion recognition system: CNN + L
 
 ## 12. Key Takeaways
 
-- Multimodal learning (EEG + physio + eye) captures a more complete emotional representation, and the fused model beats each single modality
+- Multimodal learning (EEG + physio + eye) captures a more complete emotional representation; the best models in our ablation are multimodal
 - EEG signals show how the brain reacts to different emotional states
 - GSR readings show changes in skin response, indicating emotional intensity or stress
 - Eye tracking reveals where a person focuses their attention during emotional moments
