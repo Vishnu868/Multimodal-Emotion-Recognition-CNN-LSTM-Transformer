@@ -1,0 +1,91 @@
+{
+  "config": {
+    "data": "/home/user/Multimodal-Emotion-Recognition-CNN-LSTM-Transformer/data/processed/affec_T50.npz",
+    "labels": "stimulus4",
+    "modalities": [
+      "eeg",
+      "physio",
+      "eye"
+    ],
+    "split": "subject",
+    "folds": 3,
+    "test_size": 0.15,
+    "val_size": 0.15,
+    "samples": 2000,
+    "noise": 3.0,
+    "epochs": 30,
+    "patience": 8,
+    "batch_size": 64,
+    "lr": 0.001,
+    "weight_decay": 0.01,
+    "dropout": 0.3,
+    "label_smoothing": 0.05,
+    "modality_dropout": 0.1,
+    "d_model": 128,
+    "heads": 4,
+    "layers": 2,
+    "seed": 0,
+    "threads": 2,
+    "out": "/home/user/Multimodal-Emotion-Recognition-CNN-LSTM-Transformer/outputs/ablation_affec_stimulus4_subject/eeg+physio+eye"
+  },
+  "folds": [
+    {
+      "acc": 0.3515695067264574,
+      "f1": 0.34302037949289926,
+      "balanced_acc": 0.35187807309618363
+    },
+    {
+      "acc": 0.3556561085972851,
+      "f1": 0.3489237883918169,
+      "balanced_acc": 0.3549909607386785
+    },
+    {
+      "acc": 0.33967391304347827,
+      "f1": 0.32995963111729476,
+      "balanced_acc": 0.3419638332370115
+    }
+  ],
+  "summary": {
+    "acc": [
+      0.3489665094557403,
+      0.006779348040116705
+    ],
+    "f1": [
+      0.340634599667337,
+      0.007923752238901634
+    ],
+    "balanced_acc": [
+      0.34961095569062456,
+      0.005554660429712071
+    ],
+    "chance": 0.25
+  },
+  "n_samples": 3324,
+  "confusion_matrix": [
+    [
+      292,
+      99,
+      272,
+      178
+    ],
+    [
+      208,
+      249,
+      176,
+      211
+    ],
+    [
+      201,
+      65,
+      338,
+      230
+    ],
+    [
+      151,
+      71,
+      302,
+      281
+    ]
+  ],
+  "report": "              precision    recall  f1-score   support\n\n     neutral      0.343     0.347     0.345       841\n       happy      0.514     0.295     0.375       844\n         sad      0.311     0.405     0.352       834\n       angry      0.312     0.349     0.330       805\n\n    accuracy                          0.349      3324\n   macro avg      0.370     0.349     0.350      3324\nweighted avg      0.371     0.349     0.351      3324\n"
+}

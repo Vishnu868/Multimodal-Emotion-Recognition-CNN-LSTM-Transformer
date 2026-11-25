@@ -1,0 +1,90 @@
+{
+  "config": {
+    "data": "/home/user/Multimodal-Emotion-Recognition-CNN-LSTM-Transformer/data/processed/affec_T50.npz",
+    "labels": "stimulus4",
+    "modalities": [
+      "eeg",
+      "eye"
+    ],
+    "split": "subject",
+    "folds": 3,
+    "test_size": 0.15,
+    "val_size": 0.15,
+    "samples": 2000,
+    "noise": 3.0,
+    "epochs": 30,
+    "patience": 8,
+    "batch_size": 64,
+    "lr": 0.001,
+    "weight_decay": 0.01,
+    "dropout": 0.3,
+    "label_smoothing": 0.05,
+    "modality_dropout": 0.1,
+    "d_model": 128,
+    "heads": 4,
+    "layers": 2,
+    "seed": 0,
+    "threads": 2,
+    "out": "/home/user/Multimodal-Emotion-Recognition-CNN-LSTM-Transformer/outputs/ablation_affec_stimulus4_subject/eeg+eye"
+  },
+  "folds": [
+    {
+      "acc": 0.3488789237668161,
+      "f1": 0.3478222657122107,
+      "balanced_acc": 0.3475816851896442
+    },
+    {
+      "acc": 0.3339366515837104,
+      "f1": 0.33466675315136085,
+      "balanced_acc": 0.333703453439644
+    },
+    {
+      "acc": 0.35597826086956524,
+      "f1": 0.3584597154557507,
+      "balanced_acc": 0.35578325390835386
+    }
+  ],
+  "summary": {
+    "acc": [
+      0.3462646120733639,
+      0.009186370491130197
+    ],
+    "f1": [
+      0.34698291143977406,
+      0.009731551794738684
+    ],
+    "balanced_acc": [
+      0.34568946417921403,
+      0.009112803170951107
+    ],
+    "chance": 0.25
+  },
+  "n_samples": 3324,
+  "confusion_matrix": [
+    [
+      335,
+      94,
+      257,
+      155
+    ],
+    [
+      247,
+      269,
+      185,
+      143
+    ],
+    [
+      225,
+      86,
+      319,
+      204
+    ],
+    [
+      166,
+      90,
+      321,
+      228
+    ]
+  ],
+  "report": "              precision    recall  f1-score   support\n\n     neutral      0.344     0.398     0.369       841\n       happy      0.499     0.319     0.389       844\n         sad      0.295     0.382     0.333       834\n       angry      0.312     0.283     0.297       805\n\n    accuracy                          0.346      3324\n   macro avg      0.363     0.346     0.347      3324\nweighted avg      0.363     0.346     0.348      3324\n"
+}

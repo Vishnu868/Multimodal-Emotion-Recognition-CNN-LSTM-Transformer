@@ -1,0 +1,80 @@
+{
+  "config": {
+    "data": "synthetic",
+    "labels": "stimulus4",
+    "modalities": [
+      "eeg",
+      "physio",
+      "eye"
+    ],
+    "split": "random",
+    "folds": 1,
+    "test_size": 0.15,
+    "val_size": 0.15,
+    "samples": 2000,
+    "noise": 3.0,
+    "epochs": 30,
+    "patience": 10,
+    "batch_size": 64,
+    "lr": 0.001,
+    "weight_decay": 0.01,
+    "dropout": 0.3,
+    "label_smoothing": 0.05,
+    "modality_dropout": 0.1,
+    "d_model": 128,
+    "heads": 4,
+    "layers": 2,
+    "seed": 0,
+    "out": "../outputs/synthetic_random_all"
+  },
+  "folds": [
+    {
+      "acc": 0.9966666666666667,
+      "f1": 0.9966028554377266,
+      "balanced_acc": 0.9963768115942029
+    }
+  ],
+  "summary": {
+    "acc": [
+      0.9966666666666667,
+      0.0
+    ],
+    "f1": [
+      0.9966028554377266,
+      0.0
+    ],
+    "balanced_acc": [
+      0.9963768115942029,
+      0.0
+    ],
+    "chance": 0.25
+  },
+  "n_samples": 300,
+  "confusion_matrix": [
+    [
+      68,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      74,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      78,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      79
+    ]
+  ],
+  "report": "              precision    recall  f1-score   support\n\n     neutral      1.000     0.986     0.993        69\n       happy      1.000     1.000     1.000        74\n         sad      1.000     1.000     1.000        78\n       angry      0.988     1.000     0.994        79\n\n    accuracy                          0.997       300\n   macro avg      0.997     0.996     0.997       300\nweighted avg      0.997     0.997     0.997       300\n"
+}
