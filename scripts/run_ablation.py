@@ -12,7 +12,7 @@ import os
 import subprocess
 import sys
 
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 MODS = ["eeg", "physio", "eye"]
 
 
@@ -23,6 +23,8 @@ def main():
     ap.add_argument("--split", default="subject")
     ap.add_argument("--folds", type=int, default=5)
     args, extra = ap.parse_known_args()
+    if args.data != "synthetic":
+        args.data = os.path.abspath(args.data)
 
     tag = "synthetic" if args.data == "synthetic" else f"affec_{args.labels}"
     out_root = os.path.join(ROOT, "outputs", f"ablation_{tag}_{args.split}")
@@ -34,7 +36,7 @@ def main():
         cmd = [sys.executable, os.path.join(ROOT, "src", "train.py"), "--data", args.data, "--labels", args.labels,
                "--split", args.split, "--folds", str(args.folds), "--modalities", *sub, "--out", out, *extra]
         print(">>", " ".join(cmd), flush=True)
-        subprocess.run(cmd, check=True, cwd=os.path.join(ROOT, "src"))
+        subprocess.run(cmd, check=True)
         s = json.load(open(os.path.join(out, "metrics.json")))["summary"]
         rows.append((" + ".join(m.upper() if m == "eeg" else m.capitalize() for m in sub), s))
 

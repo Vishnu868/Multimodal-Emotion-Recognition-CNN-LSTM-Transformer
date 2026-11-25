@@ -117,7 +117,8 @@ def process_run(raw, sub, run, ev, beh):
                 if o["t0"] + dur > on[-1]:
                     continue
                 hm = gaze_heatmaps(on, df.BPOGX.to_numpy(), df.BPOGY.to_numpy(), df.BPOGV.fillna(0).to_numpy(),
-                                   frame_centres(o["t0"], dur, T), hw=ARGS.eye_hw)
+                                   frame_centres(o["t0"], dur, T), hw=ARGS.eye_hw,
+                                   crop=tuple(ARGS.eye_crop))
                 o["eye"] = hm
                 # require valid gaze in at least half of the frames
                 o["mask"][2] = (hm.reshape(T, -1).sum(1) > 0).mean() >= 0.5
@@ -167,6 +168,8 @@ def main():
     ap.add_argument("--duration", type=float, default=5.0, help="seconds from video onset")
     ap.add_argument("--baseline", type=float, default=1.0, help="pre-video baseline seconds (0 = off)")
     ap.add_argument("--eye-hw", type=int, default=16)
+    ap.add_argument("--eye-crop", type=float, nargs=2, default=[0.25, 0.75],
+                    help="screen region (fraction) mapped onto the heatmap; the face video sits centrally")
     ap.add_argument("--workers", type=int, default=os.cpu_count())
     ap.add_argument("--include-excluded", action="store_true",
                     help="keep participants flagged ex=1 in participants.tsv")

@@ -177,11 +177,12 @@ def main():
     ap.add_argument("--heads", type=int, default=4)
     ap.add_argument("--layers", type=int, default=2)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--threads", type=int, default=os.cpu_count())
     ap.add_argument("--out", default=None, help="output directory (default outputs/<auto-name>)")
     args = ap.parse_args()
 
     set_seed(args.seed)
-    torch.set_num_threads(os.cpu_count())
+    torch.set_num_threads(args.threads)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if args.data == "synthetic":
         data = make_synthetic(n=args.samples, noise=args.noise, seed=args.seed)
