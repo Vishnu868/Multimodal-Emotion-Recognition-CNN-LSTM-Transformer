@@ -21,6 +21,7 @@ import os
 import sys
 import warnings
 import multiprocessing as mp
+from concurrent.futures import ProcessPoolExecutor
 from functools import partial
 
 import numpy as np
@@ -68,19 +69,22 @@ def process_run(raw, sub, run, ev, beh):
            for t in trials]
     stem = f"{raw}/{sub}/%s/{sub}_task-fer_run-{run}_%s"
 
-    # ---- EEG
+    # ---- EEG: read + band-filter only a padded window around each trial (keeps memory low)
     edf = stem % ("eeg", "eeg.edf")
     if os.path.exists(edf):
         try:
-            r = mne.io.read_raw_edf(edf, preload=True, verbose=False)
-            sf, data = r.info["sfreq"], r.get_data() * 1e6           # volts -> microvolts
-            banded = eeg_band_filter(data, sf)
+            r = mne.io.read_raw_edf(edf, preload=False, verbose=False)
+            sf, n_times, pad = r.info["sfreq"], r.n_times, 5.0
             for o in out:
-                if o["t0"] + dur > data.shape[1] / sf:
+                start, stop = o["t0"] - base - pad, o["t0"] + dur + pad
+                if o["t0"] - base < 0 or o["t0"] + dur > n_times / sf:
                     continue
-                stim = eeg_de_frames(banded, sf, frame_centres(o["t0"], dur, T))
+                i0, i1 = max(int(start * sf), 0), min(int(stop * sf), n_times)
+                banded = eeg_band_filter(r.get_data(start=i0, stop=i1) * 1e6, sf)   # V -> uV
+                off = i0 / sf                                   # window-local time
+                stim = eeg_de_frames(banded, sf, frame_centres(o["t0"] - off, dur, T))
                 if base > 0:
-                    stim -= eeg_de_frames(banded, sf, frame_centres(o["t0"] - base, base, 10)).mean(0)
+                    stim -= eeg_de_frames(banded, sf, frame_centres(o["t0"] - off - base, base, 10)).mean(0)
                 o["eeg"] = to_grid(stim, r.ch_names)
                 o["mask"][0] = np.isfinite(o["eeg"]).all()
         except Exception as e:
@@ -179,8 +183,9 @@ def main():
     print(f"{len(subs)} subjects", flush=True)
 
     # "spawn" avoids fork-after-threads deadlocks in BLAS / MNE
-    with mp.get_context("spawn").Pool(ARGS.workers) as pool:
-        rows = [r for rs in pool.imap(partial(process_subject, args=ARGS), subs) for r in rs]
+    # (a crashed worker raises BrokenProcessPool instead of hanging)
+    with ProcessPoolExecutor(ARGS.workers, mp_context=mp.get_context("spawn")) as pool:
+        rows = [r for rs in pool.map(partial(process_subject, args=ARGS), subs) for r in rs]
     if not rows:
         sys.exit("no trials found - check --raw")
 
