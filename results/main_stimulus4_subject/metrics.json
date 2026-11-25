@@ -1,0 +1,101 @@
+{
+  "config": {
+    "data": "data/processed/affec_T50.npz",
+    "labels": "stimulus4",
+    "modalities": [
+      "eeg",
+      "physio",
+      "eye"
+    ],
+    "split": "subject",
+    "folds": 5,
+    "test_size": 0.15,
+    "val_size": 0.15,
+    "samples": 2000,
+    "noise": 3.0,
+    "epochs": 30,
+    "patience": 8,
+    "batch_size": 64,
+    "lr": 0.001,
+    "weight_decay": 0.01,
+    "dropout": 0.3,
+    "label_smoothing": 0.05,
+    "modality_dropout": 0.1,
+    "d_model": 128,
+    "heads": 4,
+    "layers": 2,
+    "seed": 0,
+    "threads": 2,
+    "out": "outputs/main_stimulus4_subject"
+  },
+  "folds": [
+    {
+      "acc": 0.38023952095808383,
+      "f1": 0.37595980968951087,
+      "balanced_acc": 0.37924624816132746
+    },
+    {
+      "acc": 0.3774733637747336,
+      "f1": 0.3746825355112381,
+      "balanced_acc": 0.37642687648307727
+    },
+    {
+      "acc": 0.3203592814371258,
+      "f1": 0.3132824895938399,
+      "balanced_acc": 0.3188552999187786
+    },
+    {
+      "acc": 0.35082458770614694,
+      "f1": 0.34963900513754975,
+      "balanced_acc": 0.35075579573934834
+    },
+    {
+      "acc": 0.36596385542168675,
+      "f1": 0.36965579843389196,
+      "balanced_acc": 0.36654933695067476
+    }
+  ],
+  "summary": {
+    "acc": [
+      0.3589721218595554,
+      0.021912627926804405
+    ],
+    "f1": [
+      0.35664392767320613,
+      0.02365200500395753
+    ],
+    "balanced_acc": [
+      0.35836671145064125,
+      0.022127619182958348
+    ],
+    "chance": 0.25
+  },
+  "n_samples": 3324,
+  "confusion_matrix": [
+    [
+      302,
+      145,
+      244,
+      150
+    ],
+    [
+      202,
+      300,
+      155,
+      187
+    ],
+    [
+      225,
+      90,
+      328,
+      191
+    ],
+    [
+      171,
+      98,
+      273,
+      263
+    ]
+  ],
+  "report": "              precision    recall  f1-score   support\n\n     neutral      0.336     0.359     0.347       841\n       happy      0.474     0.355     0.406       844\n         sad      0.328     0.393     0.358       834\n       angry      0.332     0.327     0.330       805\n\n    accuracy                          0.359      3324\n   macro avg      0.367     0.359     0.360      3324\nweighted avg      0.368     0.359     0.360      3324\n"
+}
