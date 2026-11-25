@@ -148,7 +148,7 @@ and updates all parameters (CNN, LSTM, GRU, Transformer, classifier) with W_new 
 
 ## 7. Implementation
 
-PyTorch, NumPy/SciPy, MNE (EDF reading), pandas, scikit-learn, Matplotlib. The model has about 1.0 M parameters, and one epoch on 2,300 trials takes about 20–30 s on a 4-core CPU.
+PyTorch, NumPy/SciPy, MNE (EDF reading), pandas, scikit-learn, Matplotlib. The model has about 1.2 M parameters, and one epoch on 2,300 trials takes about 20–30 s on a 4-core CPU.
 
 | File | Purpose |
 |---|---|
