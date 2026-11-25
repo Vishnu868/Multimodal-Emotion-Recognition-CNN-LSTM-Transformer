@@ -1,3 +1,9 @@
 torch>=2.1
 numpy>=1.24
+scipy>=1.10
+pandas>=2.0
 scikit-learn>=1.3
+mne>=1.6          # reading EEG .edf files
+matplotlib>=3.7   # training curves / confusion matrices
+remotezip>=0.12   # partial downloads of the AFFEC zip archives from Zenodo
+pytest>=7

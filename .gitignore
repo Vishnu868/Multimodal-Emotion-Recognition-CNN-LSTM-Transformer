@@ -10,3 +10,4 @@ outputs/
 *.pt
 *.joblib
 .env
+*.part
