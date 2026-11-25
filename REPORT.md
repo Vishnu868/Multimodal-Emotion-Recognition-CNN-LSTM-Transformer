@@ -209,8 +209,10 @@ All ablation rows use the same 3-fold participant split, so they are directly co
 | Setting | Accuracy | Macro-F1 |
 |---|---|---|
 | 4 emotions, subject-**dependent** random split (5-fold) | 0.361 ± 0.026 | 0.357 ± 0.031 |
-| 6 emotions (`stimulus6`), subject-independent (chance 0.167) | *running* | |
-| Felt valence × arousal quadrants (`felt_va4`), subject-independent | *running* | |
+| 6 emotions (`stimulus6`), subject-independent 3-fold (chance 0.167) | 0.257 ± 0.010 | 0.250 ± 0.005 |
+| Felt valence × arousal quadrants (`felt_va4`), subject-independent 3-fold (chance 0.25) | 0.385 ± 0.008 | 0.321 ± 0.013 |
+
+With **six emotions** the model reaches 25.7%, about 1.5× chance (16.7%). Happy is again the most recognisable class (F1 0.35); fear and disgust are the hardest (F1 0.19 and 0.24). For **felt** emotion, the quadrants are unbalanced: low valence/low arousal ("sad") covers 49% of trials. Balanced accuracy (0.333 vs 0.25 chance) is therefore the fairer number. Self-reported felt emotion is harder to predict than the portrayed emotion, as expected, because it varies from person to person for the same video.
 
 ## 9. Discussion
 

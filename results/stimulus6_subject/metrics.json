@@ -1,0 +1,115 @@
+{
+  "config": {
+    "data": "data/processed/affec_T50.npz",
+    "labels": "stimulus6",
+    "modalities": [
+      "eeg",
+      "physio",
+      "eye"
+    ],
+    "split": "subject",
+    "folds": 3,
+    "test_size": 0.15,
+    "val_size": 0.15,
+    "samples": 2000,
+    "noise": 3.0,
+    "epochs": 30,
+    "patience": 8,
+    "batch_size": 64,
+    "lr": 0.001,
+    "weight_decay": 0.01,
+    "dropout": 0.3,
+    "label_smoothing": 0.05,
+    "modality_dropout": 0.1,
+    "d_model": 128,
+    "heads": 4,
+    "layers": 2,
+    "seed": 0,
+    "threads": 2,
+    "out": "outputs/stimulus6_subject"
+  },
+  "folds": [
+    {
+      "acc": 0.27041742286751363,
+      "f1": 0.25637728983294666,
+      "balanced_acc": 0.2687197322980009
+    },
+    {
+      "acc": 0.24667472793228537,
+      "f1": 0.24763754169612695,
+      "balanced_acc": 0.24667007834971055
+    },
+    {
+      "acc": 0.25285285285285286,
+      "f1": 0.24545824039058506,
+      "balanced_acc": 0.2546035471589046
+    }
+  ],
+  "summary": {
+    "acc": [
+      0.2566483345508839,
+      0.01005760580147831
+    ],
+    "f1": [
+      0.24982435730655286,
+      0.0047182646574552
+    ],
+    "balanced_acc": [
+      0.25666445260220533,
+      0.00911892933205461
+    ],
+    "chance": 0.16666666666666666
+  },
+  "n_samples": 4972,
+  "confusion_matrix": [
+    [
+      304,
+      93,
+      148,
+      69,
+      76,
+      151
+    ],
+    [
+      197,
+      257,
+      91,
+      105,
+      75,
+      119
+    ],
+    [
+      219,
+      60,
+      192,
+      76,
+      77,
+      210
+    ],
+    [
+      155,
+      62,
+      136,
+      170,
+      84,
+      198
+    ],
+    [
+      226,
+      86,
+      136,
+      97,
+      127,
+      173
+    ],
+    [
+      184,
+      82,
+      147,
+      84,
+      80,
+      226
+    ]
+  ],
+  "report": "              precision    recall  f1-score   support\n\n     neutral      0.237     0.361     0.286       841\n       happy      0.402     0.305     0.346       844\n         sad      0.226     0.230     0.228       834\n       angry      0.283     0.211     0.242       805\n        fear      0.245     0.150     0.186       845\n     disgust      0.210     0.281     0.240       803\n\n    accuracy                          0.257      4972\n   macro avg      0.267     0.257     0.255      4972\nweighted avg      0.267     0.257     0.255      4972\n"
+}
