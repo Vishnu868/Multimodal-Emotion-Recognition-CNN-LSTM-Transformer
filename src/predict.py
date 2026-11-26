@@ -42,7 +42,7 @@ def main():
     names = model.modalities
     for k, i in enumerate(idx):
         p = probs[k]
-        print(f"sample {i}: p = {np.round(p, 2).tolist()} -> predicted '{classes[p.argmax()]}' "
+        print(f"sample {i}: p = [{', '.join(f'{v:.2f}' for v in p)}] -> predicted '{classes[p.argmax()]}' "
               f"(index {p.argmax()}), true '{classes[data['labels'][i]]}'")
         a = attn[k, -1].numpy()                       # last fusion layer, (tokens, tokens)
         rows = ", ".join(f"{q}->[" + " ".join(f"{names[j]}:{a[r, j]:.2f}" for j in range(len(names))) + "]"
